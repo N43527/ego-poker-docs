@@ -1,0 +1,73 @@
+---
+title: "How to Play"
+description: "Profiles, lobbies, dealing, turn order, and the round lifecycle"
+---
+
+## Profiles
+
+Before you can play, you register a profile: a **name** plus a **passkey**.
+
+- Registration creates a document in the `profiles` collection keyed by a device UUID stored in your browser's `localStorage`. One profile per device.
+- **Reconnect** looks up a profile by name and passkey, so you can recover your identity on a new device or after clearing storage.
+- The same profile is shared across both games in the hub — Stratego requires you to register through Ego Poker first.
+
+<Warning>
+Passkeys are stored in plaintext in Firestore and there is no Firebase Auth involved. Don't reuse a real password.
+</Warning>
+
+## Lobby
+
+- **Create Game** generates a random 4-character code and makes you the host. The game starts in `waiting` status.
+- **Join Game** with a code adds you to the players list. There is no player cap for Ego Poker.
+- The lobby code is displayed prominently in the sidebar during the game so you can invite people mid-session.
+- Everyone shares a **chat box** in the sidebar, synced through Firestore.
+
+## Dealing
+
+When the host presses **START GAME** (or a new round begins):
+
+1. A fresh 52-card deck is built and shuffled.
+2. **Five community cards** are dealt face up in the center — all at once. There are no betting streets.
+3. Each player receives **two hole cards**, visible only to them. Opponents see face-down card backs.
+4. The shared Confidence resets to **1** and every player's round confidence resets to 1.
+
+Cards use compact notation: rank (`2`–`9`, `T`, `J`, `Q`, `K`, `A`) followed by suit (`S`, `H`, `D`, `C`), e.g. `AS` is the ace of spades.
+
+## Turn order
+
+Turn order is deterministic: player IDs are sorted, and play proceeds through that sorted list, skipping folded players.
+
+- **Round 1** starts with the first player in sorted order.
+- Each subsequent round rotates the starting player: round *N* starts with player at index `(N − 1) % playerCount`.
+
+The active player's seat glows on the circular table. Your own seat is always rendered at the bottom.
+
+## Your options on a turn
+
+On your turn you have three actions (see [Confidence Betting](/confidence-betting) for full mechanics):
+
+| Action | Effect |
+| --- | --- |
+| **Fold** | Drop out of the round. You can't win it, but you lose nothing. |
+| **Call** | Match the current shared Confidence level. |
+| **Raise** | Push the shared Confidence to a higher value (2–10). |
+
+## How a round ends
+
+A round ends one of two ways:
+
+<Accordion title="Everyone else folds">
+If only one non-folded player remains, they win immediately and gain the current Confidence value. No cards are compared and nobody loses points.
+</Accordion>
+
+<Accordion title="Showdown">
+Once every active player has matched the current Confidence **and** acted since the last raise, hands are revealed. Each player's best 5-card hand from their 2 hole cards + 5 community cards is evaluated with `pokersolver`. Winners gain the Confidence value; every other active player loses it. The winning hand description (e.g. "Two Pair, A's & 8's") is shown to everyone.
+</Accordion>
+
+## Between rounds
+
+After a round ends, each player clicks **Ready**. When all players are ready, the host's client automatically deals the next round. The host can also press **End Game** at any time to finish the session.
+
+## Winning the game
+
+The first player to reach **50 total points** wins. A Game Over screen shows the final leaderboard sorted by score, and **Back to Lobby** reloads the app.

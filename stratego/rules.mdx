@@ -1,0 +1,83 @@
+---
+title: "Stratego Rules"
+description: "Board layout, pieces, movement, and battle resolution"
+---
+
+## The board
+
+A 10×10 grid (100 cells) with two impassable 2×2 **lakes** in the middle of the board, occupying rows 5–6 at columns C–D and G–H. No piece may enter or pass through a lake.
+
+Each player sets up in their own four back rows: Red on rows 7–10, Blue on rows 1–4. The two middle rows (5–6, outside the lakes) start empty.
+
+## The army
+
+Each player fields exactly **40 pieces**:
+
+| Rank | Piece | Count | Movable |
+| --- | --- | --- | --- |
+| F | Flag | 1 | No |
+| B | Bomb | 6 | No |
+| 1 | Spy | 1 | Yes |
+| 2 | Scout | 8 | Yes |
+| 3 | Miner | 5 | Yes |
+| 4 | Sergeant | 4 | Yes |
+| 5 | Lieutenant | 4 | Yes |
+| 6 | Captain | 4 | Yes |
+| 7 | Major | 3 | Yes |
+| 8 | Colonel | 2 | Yes |
+| 9 | General | 1 | Yes |
+| 10 | Marshal | 1 | Yes |
+
+<Note>
+This variant uses **ascending** rank numbering: 10 (Marshal) is the strongest, 1 (Spy) the weakest. On the board, the Flag renders as 🏴, the Bomb as 💣, and the Spy as `S`.
+</Note>
+
+## Movement
+
+- **Standard pieces** move exactly **one square orthogonally** (up, down, left, right). Diagonal movement does not exist.
+- **Scouts (2)** slide **any number of squares in a straight line**, like a rook. They are blocked by lakes and by any piece; they may attack the first enemy piece in their path.
+- **Flags and Bombs never move.**
+- You may move onto an empty square or onto an enemy piece (an attack). You can never move onto your own piece or into a lake.
+
+Players alternate turns, one move per turn, starting with Red.
+
+## Battle resolution
+
+Attacking an enemy piece resolves immediately, in this order:
+
+<Accordion title="1. Defender is the Flag">
+The attacker captures the Flag and **wins the game on the spot**.
+</Accordion>
+
+<Accordion title="2. Defender is a Bomb">
+The Bomb destroys the attacker — unless the attacker is a **Miner (3)**, who defuses the Bomb and takes its square. Bombs are only ever removed by Miners; they otherwise sit and kill indefinitely.
+</Accordion>
+
+<Accordion title="3. Spy attacks the Marshal">
+If a **Spy (1)** attacks the **Marshal (10)**, the Spy wins. This only works on the attack — if the Marshal attacks the Spy, the Marshal wins by rank as usual.
+</Accordion>
+
+<Accordion title="4. Rank comparison">
+Otherwise the higher rank wins and takes the defender's square. **Equal ranks destroy each other** — both pieces are removed.
+</Accordion>
+
+The winner of a battle (if any) occupies the defender's square and is permanently **revealed** to both players. Losing pieces move to the captured panel.
+
+## Winning
+
+The game ends when a player **captures the enemy Flag**. That is the only end condition enforced in live play.
+
+<Note>
+The rules module (`strategoRules.js`) also implements a secondary win condition — a player with no legal moves remaining loses — via `checkWinCondition`. The multiplayer service never calls it, so in the deployed game a fully immobilized player is simply stuck; only a Flag capture ends the game.
+</Note>
+
+## Quick reference
+
+```text
+Move:    1 square orthogonal (Scout: any distance in a line)
+Attack:  move onto an enemy piece
+Flag     -> attacker wins the game
+Bomb     -> kills attacker, unless attacker is Miner (3)
+Spy (1)  -> beats Marshal (10) only when attacking
+Ties     -> both pieces removed
+```

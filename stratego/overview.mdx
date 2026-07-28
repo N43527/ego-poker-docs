@@ -1,0 +1,65 @@
+---
+title: "Stratego Overview"
+description: "The two-player Stratego variant bundled in the Game Hub"
+---
+
+The Game Hub's second game is a real-time, two-player Stratego variant: deploy a hidden 40-piece army on a 10×10 board and capture the enemy flag. Like Ego Poker, it runs entirely on Firestore subscriptions with no game server.
+
+## Requirements
+
+Stratego reuses the shared profile system. If you haven't registered yet, the app shows a **Registration Required** screen directing you to register through Ego Poker first — your profile carries over automatically.
+
+## Game lifecycle
+
+<Steps>
+  <Step title="Create or join">
+    The creator gets a 4-character game code and plays **Red**. The second player joins with the code and plays **Blue**. Games are capped at exactly 2 players — joining a full game or one you're already in raises an error.
+  </Step>
+  <Step title="Setup phase">
+    When the second player joins, the game enters `setup`. Each player privately arranges their 40 pieces in their own four back rows. When both players submit, the game flips to `in-progress` and **Red moves first**.
+  </Step>
+  <Step title="Battle">
+    Players alternate turns moving one piece. Moving onto an enemy piece triggers a battle with an animated reveal overlay both players see.
+  </Step>
+  <Step title="Game over">
+    Capturing the enemy Flag ends the game immediately. A victory/defeat overlay announces the winner by name.
+  </Step>
+</Steps>
+
+## Setup phase
+
+The setup screen gives you a piece tray and your color's four setup rows (rows 7–10 for Red, 1–4 for Blue; the board is visually flipped for Blue so your side is always at the bottom).
+
+- **Click a piece type in the tray**, then click cells to place copies until that type runs out.
+- **Click a placed piece** to return it to the tray.
+- **Auto-Place** randomly fills all remaining empty cells with your remaining pieces — useful for fast starts or finishing a partial layout.
+- **Clear All** resets the board and tray.
+- Submit is enabled only when all **40 pieces** are placed.
+
+## The board UI
+
+- Coordinate labels `A–J` (columns) and `1–10` (rows) frame the board; move history reads like `moved B3 → B5` or `attacked at E6`.
+- The **last move** is highlighted on the board, color-coded by player, with a distinct style for battles.
+- Click your piece to select it and see its valid destinations; click a destination to move.
+- A **turn indicator** shows whose move it is; selections clear automatically when the turn changes.
+
+## Battle reveals
+
+When a battle occurs, both pieces are revealed in an overlay to **both players**, and the involved pieces are marked `revealed` on the board thereafter. This is the core information game: every attack leaks intel.
+
+## Captured panel
+
+A sidebar tracks casualties for both armies. For each piece type it shows pip rows (one pip per copy), filling in as copies die, with a running `−N` count and a strikethrough state once a type is wiped out.
+
+## Notes and piece tagging
+
+The variant's signature feature: a private intelligence layer over the opponent's hidden pieces.
+
+- **Click (or right-click) an enemy piece** to open the note editor.
+- **Tag a perceived rank** — mark the piece as any of the 12 piece types, with a confidence level of **✓✓ Certain** or **? Probable**. The tag renders on the piece for you.
+- **Free-text notes** — e.g. "Moved 3 squares — must be Scout". Pieces with a text note show a badge; hover for a tooltip.
+- Notes are stored in `localStorage` per game (`stratego-notes-<gameId>`), so they are **completely private** — your opponent never sees them and they never touch Firestore.
+
+<Note>
+Because notes are keyed by piece ID rather than board position, tags follow a piece as it moves around the board.
+</Note>

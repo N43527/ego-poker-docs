@@ -1,0 +1,68 @@
+---
+title: "Scoring"
+description: "How points are won and lost, and how the game ends"
+---
+
+Every player has a running **total score** (shown as `pts` under their seat). Scores change only when a round ends, and always by the round's final Confidence value.
+
+## Round outcomes
+
+### Win by fold-out
+
+If everyone else folds, the last active player gains the current Confidence value. Nobody loses anything.
+
+| Player | Change |
+| --- | --- |
+| Last player standing | **+Confidence** |
+| Everyone who folded | 0 |
+
+### Win by showdown
+
+When a showdown triggers, each active player's hand is solved from their 2 hole cards plus the 5 community cards (best 5 of 7) using the `pokersolver` library. `Hand.winners` picks the best hand(s):
+
+| Player | Change |
+| --- | --- |
+| Showdown winner(s) | **+Confidence** |
+| Active players who lost the showdown | **−Confidence** |
+| Folded players | 0 |
+
+Scores can go negative — there is no floor.
+
+### Ties
+
+If multiple hands tie for best, **every tied player gains the full Confidence value** — the reward is not split. All tied winners are listed in the winner banner along with the winning hand description (e.g. "Straight, T High").
+
+## Hand rankings
+
+Showdown uses standard poker hand rankings via `pokersolver`:
+
+Royal Flush > Straight Flush > Four of a Kind > Full House > Flush > Straight > Three of a Kind > Two Pair > Pair > High Card.
+
+<Note>
+Because all five community cards are shared and face up, hand strength differences come entirely from two hole cards. Ties are noticeably more common than in Texas Hold'em — the board itself often plays.
+</Note>
+
+## Winning the game
+
+The game ends the moment any player's total reaches **50 or more points**, checked after every round-ending score update (both fold-out and showdown paths). That player becomes the game winner.
+
+When the game ends:
+
+1. The winner banner offers a **See Results** button.
+2. The Game Over screen shows the final leaderboard, sorted by total score.
+3. **Back to Lobby** reloads the app so you can start fresh.
+
+The host can also force the game to end at any time with **End Game**.
+
+## Worked example
+
+Four players; Confidence gets raised to 6; one player folds along the way. At showdown, one hand wins outright:
+
+| Player | Round action | Result |
+| --- | --- | --- |
+| Ava | Raised to 6, best hand | +6 |
+| Ben | Called 6, lost | −6 |
+| Cam | Called 6, lost | −6 |
+| Dia | Folded at 3 | 0 |
+
+Net points are not zero-sum — with two losers, 12 points were destroyed while 6 were created. High-confidence multiway showdowns drain the table; fold-out wins inflate it.

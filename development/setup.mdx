@@ -1,0 +1,90 @@
+---
+title: "Development Setup"
+description: "Get a local development environment running"
+---
+
+## Prerequisites
+
+- **Node.js 20** (matches the CI deploy pipeline) and npm
+- A **Firebase project** with Firestore enabled, if you want your own backend
+
+## Install and run
+
+```bash
+npm install
+npm run dev
+```
+
+Vite starts a dev server with React Fast Refresh. The project uses:
+
+- **React 19** with the classic `createRoot` entry point in `src/main.jsx`
+- **Vite 7** with `@vitejs/plugin-react` (config in `vite.config.js` is the bare default)
+- **ESLint 9** flat config (`eslint.config.js`) with `react-hooks` and `react-refresh` plugins — run it with `npm run lint`
+
+There is no test suite and no TypeScript; the codebase is plain JSX with `@types/react` installed for editor hints.
+
+## Pointing at your own Firebase project
+
+All backend access goes through one file:
+
+```js src/firebase.js
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "...",
+  authDomain: "ego-demo.firebaseapp.com",
+  projectId: "ego-demo",
+  storageBucket: "ego-demo.firebasestorage.app",
+  messagingSenderId: "...",
+  appId: "..."
+};
+
+const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+```
+
+<Steps>
+  <Step title="Create a Firebase project">
+    In the [Firebase console](https://console.firebase.google.com/), create a project and enable **Cloud Firestore**.
+  </Step>
+  <Step title="Register a web app">
+    Add a web app to the project and copy its config object over the one in `src/firebase.js`.
+  </Step>
+  <Step title="No schema setup needed">
+    The app creates its three collections on the fly the first time they're written: `games`, `strategoGames`, and `profiles`. No indexes or seed data are required.
+  </Step>
+</Steps>
+
+<Warning>
+The demo config is committed to the repo and the app uses no Firebase Auth — all reads and writes come from anonymous browser clients. If you deploy your own instance, lock down Firestore security rules accordingly; the default open rules make every game and profile world-writable.
+</Warning>
+
+## Firestore collections
+
+| Collection | Document ID | Contents |
+| --- | --- | --- |
+| `games` | 4-char lobby code | Full Ego Poker game state: players, hands, face-up cards, deck, confidence, actions, chat log |
+| `strategoGames` | 4-char game code | Stratego state: board map, players/colors, turn, last move/battle, captured pieces |
+| `profiles` | device UUID | `{ name, passkey }` |
+
+## Project layout
+
+```text
+├── index.html               Vite entry
+├── firebase.json            Hosting config (serves dist/, SPA rewrite)
+├── .firebaserc              Default project: ego-demo
+├── .github/workflows/       Firebase Hosting deploy pipelines
+└── src/
+    ├── main.jsx             React root
+    ├── AppRouter.jsx        home | ego | stratego view switch
+    ├── HomePage.jsx         Game Hub landing cards
+    ├── App.jsx              Ego Poker container (state + subscription)
+    ├── firebase.js          Firebase init, exports Firestore db
+    ├── components/          Ego Poker UI (Lobby, GameScreen, GameControls, PlayerList, ChatBox)
+    ├── utils/               gameService, gameUtils, profileService
+    ├── models/              OO scaffolding for the planned refactor (unused at runtime)
+    └── stratego/            Self-contained Stratego app (components, services, utils, css)
+```
+
+See [Architecture](/development/architecture) for how these pieces interact.

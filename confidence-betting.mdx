@@ -1,0 +1,59 @@
+---
+title: "Confidence Betting"
+description: "The 1–10 confidence system that replaces chips and pots"
+---
+
+Ego Poker has no chips, no pot, and no blinds. Every round has a single shared number: **Confidence**, an integer from 1 to 10. It starts each round at **1** and can only go up.
+
+Confidence is simultaneously the bet and the stake — whatever it is when the round ends is exactly how many points change hands.
+
+## The three actions
+
+### Raise
+
+Raising declares a new, higher Confidence. In the UI you pick a value from a 1–10 grid; values at or below the current Confidence are disabled.
+
+Server-side rules enforced by `performAction`:
+
+- The new value must be **strictly greater** than the current Confidence.
+- The new value cannot exceed **10**.
+
+A raise does three things:
+
+1. Sets the shared Confidence to your value.
+2. Sets your personal round confidence to the same value.
+3. **Resets the acted list** to just you — everyone else must respond to the new level before a showdown can happen.
+
+### Call
+
+Calling matches your personal round confidence to the shared Confidence and marks you as having acted at the current level.
+
+<Note>
+There is no separate "check" action. Calling at the current level is how you pass the action along without raising — it costs nothing extra, since Confidence is a declaration rather than a chip commitment.
+</Note>
+
+### Fold
+
+Folding marks you out of the round and zeroes your round confidence. Folded players:
+
+- Are skipped in the turn rotation.
+- Cannot win the round.
+- **Lose no points** at showdown, no matter how high Confidence climbed.
+
+## Showdown trigger
+
+After every action, the game checks whether the round should end. A showdown fires when **both** conditions hold for all non-folded players:
+
+1. **All matched** — every active player's round confidence equals the shared Confidence.
+2. **All acted** — every active player is in the `currentActors` list, i.e. has called or raised since the most recent raise.
+
+Because a raise wipes `currentActors` down to just the raiser, a raise always reopens the action: play continues around the table until everyone remaining has answered the new level.
+
+If instead all but one player folds, the round ends immediately without a showdown — the survivor collects the Confidence value uncontested.
+
+## Strategy implications
+
+- **Confidence is a ratchet.** It never decreases within a round, so an early raise to 10 forces everyone to either match maximal stakes or fold.
+- **Perfect information on the board.** All five community cards are face up from the start, so the only unknowns are hole cards. Confidence is a pure statement about your two cards.
+- **Folding is free.** Since folders never lose points, bluff-heavy raising is punished only when someone calls you down.
+- **Symmetric risk at showdown.** Callers stand to lose exactly what the winner gains, so calling a high Confidence is as bold as raising it.

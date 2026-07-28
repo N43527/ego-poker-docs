@@ -1,47 +1,64 @@
 ---
 title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+description: "Play the live demo or run Ego Poker locally"
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
+## Play online
 
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
-
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+The fastest way to try Ego Poker is the hosted demo.
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
-
-    ```bash
-    npm install your-package
-    ```
+  <Step title="Open the Game Hub">
+    Go to [https://ego-demo.web.app/](https://ego-demo.web.app/) and choose **EGO Poker**.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
-
-    ```bash
-    your-cli init
-    ```
+  <Step title="Register a profile">
+    Enter a name and a passkey, then click **Register**. Your profile is tied to a device ID stored in `localStorage`; the passkey lets you reconnect to the same profile from another device with **Reconnect**.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
-
-    ```bash
-    your-cli start
-    ```
+  <Step title="Create or join a game">
+    Click **Create Game** to get a 4-character lobby code, or paste a friend's code and click **Join Game**. Share the code shown in the sidebar to invite others.
+  </Step>
+  <Step title="Start playing">
+    The host clicks **START GAME** once everyone is in. Cards are dealt instantly and play proceeds in turns — see [How to Play](/how-to-play).
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+<Note>
+Lobby codes are 4 characters drawn from letters and digits (base-36), so a code like `K3ZQ` is valid — they are not strictly letters.
+</Note>
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+## Run locally
+
+Requires Node.js (the CI pipeline uses Node 20) and npm.
+
+<Steps>
+  <Step title="Install dependencies">
+    ```bash
+    npm install
+    ```
+  </Step>
+  <Step title="Start the dev server">
+    ```bash
+    npm run dev
+    ```
+    Vite serves the app with hot module replacement, by default at `http://localhost:5173`.
+  </Step>
+  <Step title="Build for production">
+    ```bash
+    npm run build
+    ```
+    Output lands in `dist/`, which is what Firebase Hosting serves. Preview the production build with `npm run preview`.
+  </Step>
+</Steps>
+
+<Warning>
+The local build connects to the **production** Firebase project (`ego-demo`) — the Firestore config is hardcoded in `src/firebase.js`. Games you create locally are real games on the live backend. To develop against your own backend, swap in your own Firebase project config. See [Development Setup](/development/setup).
+</Warning>
+
+## Available scripts
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Production build to `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | Run ESLint across the repo |
