@@ -1,6 +1,7 @@
 ---
 title: "Scoring"
 description: "How points are won and lost, and how the game ends"
+hidden: true
 ---
 
 Every player has a running **total score** (shown as `pts` under their seat). Scores change only when a round ends, and always by the round's final Confidence value.
@@ -13,7 +14,7 @@ If everyone else folds, the last active player gains the current Confidence valu
 
 | Player | Change |
 | --- | --- |
-| Last player standing | **+Confidence** |
+| Last player standing | **\+Confidence** |
 | Everyone who folded | 0 |
 
 ### Win by showdown
@@ -22,7 +23,7 @@ When a showdown triggers, each active player's hand is solved from their 2 hole 
 
 | Player | Change |
 | --- | --- |
-| Showdown winner(s) | **+Confidence** |
+| Showdown winner(s) | **\+Confidence** |
 | Active players who lost the showdown | **−Confidence** |
 | Folded players | 0 |
 
@@ -36,10 +37,10 @@ If multiple hands tie for best, **every tied player gains the full Confidence va
 
 Showdown uses standard poker hand rankings via `pokersolver`:
 
-Royal Flush > Straight Flush > Four of a Kind > Full House > Flush > Straight > Three of a Kind > Two Pair > Pair > High Card.
+Royal Flush \> Straight Flush \> Four of a Kind \> Full House \> Flush \> Straight \> Three of a Kind \> Two Pair \> Pair \> High Card.
 
 <Note>
-Because all five community cards are shared and face up, hand strength differences come entirely from two hole cards. Ties are noticeably more common than in Texas Hold'em — the board itself often plays.
+  Because all five community cards are shared and face up, hand strength differences come entirely from two hole cards. Ties are noticeably more common than in Texas Hold'em — the board itself often plays.
 </Note>
 
 ## Winning the game
@@ -60,7 +61,7 @@ Four players; Confidence gets raised to 6; one player folds along the way. At sh
 
 | Player | Round action | Result |
 | --- | --- | --- |
-| Ava | Raised to 6, best hand | +6 |
+| Ava | Raised to 6, best hand | \+6 |
 | Ben | Called 6, lost | −6 |
 | Cam | Called 6, lost | −6 |
 | Dia | Folded at 3 | 0 |
