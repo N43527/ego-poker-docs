@@ -5,7 +5,7 @@ description: "Play the live demo or run Ego Poker locally"
 
 ## Play online
 
-The fastest way to try Ego Poker is the hosted demo.
+The fastest way to try out Ego Poker is through the hosted demo.
 
 <Steps>
   <Step title="Open the Game Hub">
@@ -23,7 +23,7 @@ The fastest way to try Ego Poker is the hosted demo.
 </Steps>
 
 <Note>
-Lobby codes are 4 characters drawn from letters and digits (base-36), so a code like `K3ZQ` is valid — they are not strictly letters.
+  Lobby codes are 4 characters drawn from letters and digits (base-36), so a code like `K3ZQ` is valid — they are not strictly letters.
 </Note>
 
 ## Run locally
@@ -40,18 +40,20 @@ Requires Node.js (the CI pipeline uses Node 20) and npm.
     ```bash
     npm run dev
     ```
+
     Vite serves the app with hot module replacement, by default at `http://localhost:5173`.
   </Step>
   <Step title="Build for production">
     ```bash
     npm run build
     ```
+
     Output lands in `dist/`, which is what Firebase Hosting serves. Preview the production build with `npm run preview`.
   </Step>
 </Steps>
 
 <Warning>
-The local build connects to the **production** Firebase project (`ego-demo`) — the Firestore config is hardcoded in `src/firebase.js`. Games you create locally are real games on the live backend. To develop against your own backend, swap in your own Firebase project config. See [Development Setup](/development/setup).
+  The local build connects to the **production** Firebase project (`ego-demo`) — the Firestore config is hardcoded in `src/firebase.js`. Games you create locally are real games on the live backend. To develop against your own backend, swap in your own Firebase project config. See [Development Setup](/development/setup).
 </Warning>
 
 ## Available scripts
