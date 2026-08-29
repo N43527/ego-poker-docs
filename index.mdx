@@ -3,7 +3,7 @@ title: "Ego Poker"
 description: "A psychological poker variant where you bet confidence, not chips"
 ---
 
-Ego Poker is a real-time multiplayer poker variant built with React 19, Vite, and Firebase Firestore. Instead of chips and blinds, every round revolves around a single shared **Confidence** value from 1 to 10. Win the round and you gain that many points; lose a showdown and you lose them. First player to **50 points** wins the game.
+Ego Poker is a real-time multiplayer poker variant built with React 19, Vite, and Firebase Firestore. Instead ofXips and blinds, every round revolves around a single shared **Confidence** value from 1 to 10. Win the round and you gain that many points; lose a showdown and you lose them. First player to **50 points** wins the game.
 
 Play it live at [ego-demo.web.app](https://ego-demo.web.app/).
 
@@ -19,12 +19,15 @@ Play it live at [ego-demo.web.app](https://ego-demo.web.app/).
   <Card title="Quickstart" icon="rocket" href="/quickstart">
     Play the live demo or run the app locally in under a minute.
   </Card>
+
   <Card title="How to Play" icon="cards" href="/how-to-play">
     Profiles, lobbies, turn order, and the full round lifecycle.
   </Card>
+
   <Card title="Confidence Betting" icon="fire" href="/confidence-betting">
     The 1–10 confidence system: raise, call, fold, and showdown triggers.
   </Card>
+
   <Card title="Scoring" icon="trophy" href="/scoring">
     How points are awarded and how the game ends at 50.
   </Card>
@@ -38,6 +41,7 @@ The live app is a small **Game Hub**. Alongside Ego Poker it ships a full two-pl
   <Card title="Stratego Overview" icon="chess" href="/stratego/overview">
     Lobby, setup phase, battles, and the piece-tagging notes system.
   </Card>
+
   <Card title="Stratego Rules" icon="scale-balanced" href="/stratego/rules">
     Board layout, piece ranks, movement, and battle resolution.
   </Card>
@@ -47,12 +51,12 @@ The live app is a small **Game Hub**. Alongside Ego Poker it ships a full two-pl
 
 | Layer | Technology |
 | --- | --- |
-| Frontend | React 19 + Vite 7 |
+| Frontend | React 19 \+ Vite 7 |
 | Backend | Firebase Firestore (serverless, no custom server) |
 | Hand evaluation | [`pokersolver`](https://www.npmjs.com/package/pokersolver) |
-| State | React hooks + Firestore `onSnapshot` subscriptions |
+| State | React hooks \+ Firestore `onSnapshot` subscriptions |
 | Hosting | Firebase Hosting with GitHub Actions CI |
 
 <Note>
-The current codebase is the stable v1.0 "MVP" written in a functional style. The README flags an upcoming refactor to an object-oriented layered architecture — class scaffolding already exists under `src/models/`. See [Architecture](/development/architecture) for details.
+  The current codebase is the stable v1.0 "MVP" written in a functional style. The README flags an upcoming refactor to an object-oriented layered architecture — class scaffolding already exists under `src/models/`. See [Architecture](/development/architecture) for details.
 </Note>
