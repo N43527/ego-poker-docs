@@ -3,7 +3,7 @@ title: "Ego Poker"
 description: "A psychological poker variant where you bet confidence, not chips"
 ---
 
-Ego Poker is a real-time multiplayer poker variant built with React 19, Vite, and Firebase Firestore. Instead of chips and blinds, every round revolves around a single shared **Confidence** value from 1 to 10. Win the round and you gain that many points; lose a showdown and you lose them. First player to **50 points** wins the game.
+Ego Poker is a real-time multiplayer poker variant built with React 19, Vite, and Firebase Firestore. Instead of chips and blinds, every round revolves around a single shared **Confidence** value from 1 to 10. Win the round and you gain that many points; lose a showdown and you lose them. First player to **50 points** wins the game. 0 
 
 Play it live at [ego-demo.web.app](https://ego-demo.web.app/).
 
@@ -51,10 +51,10 @@ The live app is a small **Game Hub**. Alongside Ego Poker it ships a full two-pl
 
 | Layer | Technology |
 | --- | --- |
-| Frontend | React 19 \+ Vite 7 |
+| Frontend | React 19 + Vite 7 |
 | Backend | Firebase Firestore (serverless, no custom server) |
 | Hand evaluation | [`pokersolver`](https://www.npmjs.com/package/pokersolver) |
-| State | React hooks \+ Firestore `onSnapshot` subscriptions |
+| State | React hooks + Firestore `onSnapshot` subscriptions |
 | Hosting | Firebase Hosting with GitHub Actions CI |
 
 <Note>
